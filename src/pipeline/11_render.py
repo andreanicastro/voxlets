@@ -50,7 +50,7 @@ def process_sequence(sequence):
     print "-> Loading ground truth", sequence['name']
 
     fpath = paths.prediction_folderpath % (parameters['batch_name'], sequence['name'])
-    if not os.path.exists(fpath + 'ground_truth.pkl'):
+    if not os.path.exists(fpath):
         print "Cannot find", fpath
         return
     # gt_scene = pickle.load(open(fpath + 'ground_truth.pkl'))

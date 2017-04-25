@@ -185,7 +185,7 @@ class Scene(object):
             carver = carving.Fusion()
             carver.set_video(video)
             carver.set_voxel_grid(self.gt_tsdf.blank_copy())
-            self.im_tsdf, self.im_visible = carver.fuse(self.mu, inlier_threshold=2)
+            self.im_tsdf, self.im_visible = carver.fuse(self.mu, inlier_threshold=2, weights_threshold=1)
 
             # computing normals...
         norm_engine = features.Normals()

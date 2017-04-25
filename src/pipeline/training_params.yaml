@@ -4,7 +4,7 @@ training_data: 'oisin_house'
 
 pca:
     number_points_from_each_image: 200
-    number_dims: 400
+    number_dims: 100
 
     # max number of examples to use for pca
     subsample_length: 10000
@@ -37,7 +37,7 @@ forest: &DEFAULT_FOREST
     num_tests: 4000
     min_sample_cnt: 5
     max_depth: 30
-    num_trees: 10
+    num_trees: 40
     bag_size: 0.5
     train_parallel: True
     njobs: 4

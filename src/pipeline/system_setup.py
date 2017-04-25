@@ -6,7 +6,7 @@ host_name = socket.gethostname()
 # note: fewer testing cores as it tends to be more memory-intensive...
 if True:
     # host_name == 'troll' or host_name == 'biryani':
-    small_sample = True
+    small_sample = False
     # print "WARN- should be 500" *10
     max_sequences = 500
     max_test_sequences = 500

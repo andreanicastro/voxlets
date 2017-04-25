@@ -4,7 +4,10 @@ import cPickle
 import pdb
 from multiprocessing import Pool
 from sklearn.decomposition import RandomizedPCA
-from scipy.weave import inline
+try:
+    from scipy.weave import inline
+except:
+    from weave import inline
 
 def example_forest_params():
     '''

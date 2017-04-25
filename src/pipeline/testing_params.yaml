@@ -1,4 +1,4 @@
-batch_name: 'cvpr2016'
+batch_name: 'cvpr2016_for_release'
 
 testing_data: 'oisin_house'
 

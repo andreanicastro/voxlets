@@ -18,6 +18,7 @@ if len(sys.argv) > 1:
 else:
     parameters_path = './testing_params.yaml'
 parameters = yaml.load(open(parameters_path))
+training_params = yaml.load(open(parameters_path.replace('test', 'train')))
 
 plot_gt_oracle = False
 print_rankings = False
@@ -40,12 +41,12 @@ def process_sequence(sequence):
     print "-> Loading ground truth", sequence['name']
     fpath = paths.prediction_folderpath % (parameters['batch_name'], sequence['name'])
     sys.stdout.flush()
-    gt_scene = pickle.load(open(fpath + 'ground_truth.pkl'))
+    gt_scene = scene.Scene(training_params['mu'], None)
+    gt_scene.load_sequence(sequence, frame_nos=0, segment_with_gt=False)
     results_dict = collections.OrderedDict()
 
-    evaluation_region_loadpath = paths.evaluation_region_path % (
-        parameters['batch_name'], sequence['name'])
-        # pickle.dump(evaluation_region, open(savepath, 'w'), -1)
+    print parameters['batch_name']
+    evaluation_region_loadpath = paths.evaluation_region_path % sequence['name']
     evaluation_region = scipy.io.loadmat(
         evaluation_region_loadpath)['evaluation_region'] > 0
 
@@ -100,10 +101,6 @@ def process_sequence(sequence):
     except:
         results_dict["zheng_2"] = {
             'iou': np.nan, 'precision': np.nan, 'recall': np.nan}
-    #
-    # results_dict["zheng_3"] = yaml.load(open(
-    #     paths.implicit_predictions_dir % ("zheng_3", sequence['name']) + 'eval.yaml'))
-
 
     with open(yaml_path, 'w') as f:
         f.write(yaml.dump(results_dict, default_flow_style=False))
@@ -130,13 +127,11 @@ def get_mean_score(test, all_scores, score_type):
     return np.array(all_this_scores).mean()
 
 
-
 if __name__ == '__main__':
 
-    # print "WARNING - SMALL TEST DATA"
-    # test_data = yaml.load(open('/media/ssd/data/oisin_house/train_test/test.yaml'))
     results = mapper(process_sequence, paths.test_data)
-    yaml.dump(results, open('./nyu_cad/all_results.yaml', 'w'))
+    all_scores_path = paths.all_scores_path % parameters['batch_name']
+    yaml.dump(results, open(all_scores_path, 'w'))
 
     # printing the accumulated table
     scores = ['iou', 'precision', 'recall']
@@ -202,44 +197,6 @@ if __name__ == '__main__':
                 print "\\\\"
             else:
                 print " & ",
-
-
-
-
-
-    print "evaluate_inside_room_only is", parameters['evaluate_inside_room_only']
-    print sizes
-
-            # results_dict[desc] = {
-            #             'description': desc,
-            #             'auc':         float(dic['auc']),
-            #             'iou':         float(dic['iou']),
-            #             'precision':   float(dic['precision']),
-            #             'recall':      float(dic['recall'])}
-
-# FOR PLOTTING SIZE GRAPH:
-# %matplotlib inline
-# import numpy as np
-# import matplotlib.pyplot as plt
-
-# # sizes = [('0.005', 0.58920613885043516), ('0.002', 0.54050961991053581), ('0.004', 0.58708141996357788), ('0.0025', 0.57453766200014789), ('0.00125', 0.34895851355658664), ('0.01', 0.41102637929019542), ('0.0125', 0.2880756394244543)]
-# sizes= [(0.005, 0.58920613885043516, 0.70984726997443048, 0.79551942011236931), (0.002, 0.54050961991053581, 0.8632621227991214, 0.59782704742789716), (0.004, 0.58708141996357788, 0.71263895650791054, 0.79324306790934684), (0.0025, 0.57453766200014789, 0.79758093552027287, 0.68863955851399294), (0.00125, 0.34895851355658664, 0.91452213982477382, 0.36130407836550488), (0.01, 0.41102637929019542, 0.78158512160913218, 0.47008189501931663), (0.0125, 0.2880756394244543, 0.80438995878420205, 0.31074675183359302)]
-
-# # T  = [[s[0], s[1]] for s in sizes]
-# TT = np.array(sizes)
-# idxs = TT[:, 0].argsort()
-# print idxs
-
-# print TT
-
-# plt.figure(figsize=(9, 6))
-# plt.plot(30 * TT[idxs, 0] * 100, TT[idxs, 1], '-r', label='IoU')
-# plt.plot(30 * TT[idxs, 0] * 100, TT[idxs, 2], '--g', label='Precision')
-# plt.plot(30 * TT[idxs, 0] * 100, TT[idxs, 3], ':b', label='Recall')
-# t = 15
-# plt.plot([t, t], [0, 1], ':k', label='Voxlet size for other experiments')
-# plt.xlabel('$x$ (cm). Voxlet is of size $x$ by $2x$ by $x$')
-# plt.ylabel('IoU')
-# plt.ylim(0, 1)
-# plt.legend(loc='best')
-# plt.savefig('/home/michael/Desktop/vox_sizes.eps')
+    # 
+    # print "evaluate_inside_room_only is", parameters['evaluate_inside_room_only']
+    # print sizes

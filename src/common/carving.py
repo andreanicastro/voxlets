@@ -145,16 +145,20 @@ class KinfuAccumulator(voxel_data.WorldVoxels):
 
         self.temptemptemp = valid_voxels
 
-    def get_current_tsdf(self):
+    def get_current_tsdf(self, threshold=10):
         '''
         returns the current state of the tsdf
         '''
-        temp = self.copy()
-        temp.weights = []
-        temp.tsdf = []
-        temp.valid_voxels = []
+        temp = deepcopy(self)
+        # temp.weights = []
+        # temp.tsdf = []
+        # temp.valid_voxels = []
         temp.V = self.tsdf
         temp.V[self.valid_voxels == False] = np.nan
+        
+        # new line of code to make it more robust
+        temp.V[self.weights < threshold] = np.nan
+        print "Wights sum:", (self.weights < threshold).sum()
         return temp
 
 
@@ -205,8 +209,8 @@ class Fusion(VoxelAccumulator):
             temp /= factor
         else:
             factor = 1.0
-        temp_denoised = \
-            denoise_bilateral(temp, sigma_range=30, sigma_spatial=4.5)
+        temp_denoised = denoise_bilateral(
+            temp, sigma_range=30, sigma_spatial=4.5, multichannel=False)
         temp_denoised[np.isnan(depth)] = np.nan
         temp_denoised *= factor
         return temp_denoised
@@ -251,8 +255,11 @@ class Fusion(VoxelAccumulator):
             # ...according to eqn 9 and the text after eqn 12 (of Kinfu)
             valid_voxels_s = surface_to_voxel_dist_s <= mu
 
+        print "There are %d valid voxels" % valid_voxels_s.sum()
+
         # truncating the distance
         truncated_distance_s = -self.truncate(surface_to_voxel_dist_s, mu)
+        #truncated_distance_s = np.abs(truncated_distance_s)
 
         # expanding the valid voxels to be a full grid
         valid_voxels_f = deepcopy(inside_image_f)
@@ -273,7 +280,7 @@ class Fusion(VoxelAccumulator):
         voxels_visible_in_image_s = \
             np.abs(surface_to_voxel_dist_s) < inlier_threshold
 
-        visible_voxels_f = inside_image_f
+        visible_voxels_f = deepcopy(inside_image_f)
         visible_voxels_f[inside_image_f] = voxels_visible_in_image_s
 
         self.visible_voxels.set_indicated_voxels(visible_voxels_f, 1)
@@ -281,6 +288,8 @@ class Fusion(VoxelAccumulator):
         if measure_in_frustrum:
             temp = inside_image_f.reshape(self.in_frustrum.V.shape)
             self.in_frustrum.V[temp] += 1
+
+        return (truncated_distance_s, inside_image_f)
 
     def _set_up(self):
         """
@@ -298,7 +307,7 @@ class Fusion(VoxelAccumulator):
         self.visible_voxels.V = self.visible_voxels.V.astype(bool)
 
     def fuse(self, mu, filtering=False, measure_in_frustrum=False,
-            inlier_threshold=np.sqrt(2)):
+            inlier_threshold=np.sqrt(2), weights_threshold=10):
         '''
         mu is the truncation parameter. Default 0.03 as this is what PCL kinfu
         uses (measured in m).
@@ -323,4 +332,4 @@ class Fusion(VoxelAccumulator):
                 measure_in_frustrum=measure_in_frustrum,
                 vox_size_threshold=inlier_threshold)
 
-        return self.accum.get_current_tsdf(), self.visible_voxels
+        return self.accum.get_current_tsdf(threshold=weights_threshold), self.accum
