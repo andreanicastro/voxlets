@@ -10,7 +10,7 @@ if True:
     # print "WARN- should be 500" *10
     max_sequences = 500
     max_test_sequences = 500
-    cores = 7
+    cores = 4
     testing_cores = 6
     multicore = 1
 else:

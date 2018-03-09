@@ -1,4 +1,4 @@
-# Depth Completion Code
+# Structured Prediction of Unobserved Voxels from a Single Depth Image
 
     @inproceedings{firman-cvpr-2016,
       author = {Michael Firman and Oisin Mac Aodha and Simon Julier and Gabriel J Brostow},
@@ -11,9 +11,13 @@
 
 The tabletop dataset can be downloaded from:
 
-https://dl.dropboxusercontent.com/u/495646/voxlets/voxlets_dataset.zip
+https://www.dropbox.com/s/bqhub295475najw/voxlets_dataset.zip?dl=0
 
 This is a 395MB zip file. You will have to change some of the paths in `src/pipeline/real_data_paths.py` to the location you have extracted the dataset to.
+
+The voxel regions used to evaluate each of the scenes can be downloaded from here:
+
+https://www.dropbox.com/s/x8xc27jqbvqoal9/evaluation_regions.zip
 
 ### Getting started with the tabletop dataset
 
@@ -41,7 +45,8 @@ The code is roughly divided into three areas:
 
 ### Prerequisites
 
-I have run this code using a fairly up-to-date version of Anaconda on Ubuntu 14.04. This probably includes everything you need.
+I have run this code using **Python 2** on a fairly up-to-date version of Anaconda on Ubuntu 14.04.
+If you have a newer version of scipy, you will need to install weave seprately, which has been moved to its own project.
 
 
 ### How to run the pipeline on the tabletop dataset
@@ -64,18 +69,3 @@ Navigate to `src/pipeline`
     >> python 09_train_forest.py training_nyu_silberman.yaml
     >> python 10_predict.py testing_params_nyu_silberman.yaml
     >> python 11_render.py testing_params_nyu_silberman.yaml
-
-
-## Precomputed predictions
-
-### ... for the tabletop dataset
-
-You can download our voxelised predictions on the tabletop dataset from here:
-
-https://dl.dropboxusercontent.com/u/495646/voxlets/voxlets_results.zip
-
-This is a 40MB zip file. An example of loading and visualising the predictions are given in the `examples` folder.
-
-### ...for the NYU dataset
-
-...coming soon!

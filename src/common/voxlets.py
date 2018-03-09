@@ -557,7 +557,7 @@ class Reconstructer(object):
                 # flipping the mask direction here:
                 # weights_to_use = 1-mask
                 weights_to_use = weights_to_use.flatten()
-                weights_to_use[voxlet_prediction > 0] *= 0.5
+                weights_to_use[voxlet_prediction > 0] *= 1.0
 
             # adding the shoebox into the result
             transformed_voxlet = self._initialise_voxlet(idx, model_to_use.voxlet_params)

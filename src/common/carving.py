@@ -158,7 +158,6 @@ class KinfuAccumulator(voxel_data.WorldVoxels):
         
         # new line of code to make it more robust
         temp.V[self.weights < threshold] = np.nan
-        print "Wights sum:", (self.weights < threshold).sum()
         return temp
 
 
@@ -254,8 +253,6 @@ class Fusion(VoxelAccumulator):
         else:
             # ...according to eqn 9 and the text after eqn 12 (of Kinfu)
             valid_voxels_s = surface_to_voxel_dist_s <= mu
-
-        print "There are %d valid voxels" % valid_voxels_s.sum()
 
         # truncating the distance
         truncated_distance_s = -self.truncate(surface_to_voxel_dist_s, mu)
