@@ -579,10 +579,10 @@ class WorldVoxels(Voxels):
         # put in a ground plane...
         if ground_height:
             height_voxels = float(ground_height) / float(temp.vox_size)
-            temp.V[:, :, :height_voxels] = -10
-            temp_slice = temp.V[:, :, height_voxels]
+            temp.V[:, :, :int(height_voxels)] = -10
+            temp_slice = temp.V[:, :, int(height_voxels)]
             temp_slice[np.isnan(temp_slice)] = 10
-            temp.V[:, :, height_voxels] = temp_slice
+            temp.V[:, :, int(height_voxels)] = temp_slice
 
         #pickle.dump(self, open('/tmp/temp_voxel_grid.pkl', 'w'), protocol=pickle.HIGHEST_PROTOCOL)
         print "Generating mesh...",

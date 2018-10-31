@@ -215,7 +215,7 @@ class Mesh(object):
         voxel_grid should be a voxel grid object.
         This allows for the coordinates of the found mesh to be in world space.
         '''
-        temp_verts, temp_faces = marching_cubes(voxel_grid.V, level)
+        temp_verts, temp_faces, _, _ = marching_cubes(voxel_grid.V, level)
 
         self.vertices = voxel_grid.idx_to_world(temp_verts)
         self.faces = temp_faces

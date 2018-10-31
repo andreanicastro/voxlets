@@ -8,7 +8,7 @@ import os
 from time import time
 import yaml
 import functools
-from sklearn.decomposition import RandomizedPCA
+from sklearn.decomposition import PCA
 
 sys.path.append('..')
 from common import scene
@@ -53,7 +53,7 @@ def fit_and_save_pca(np_array, savepath):
     # fit the pca model
     # NOTE that by setting copy=False, we overwrite the input data in fitting.
     # This helps on memory but could cause issues if this function is reused elsewhere.
-    pca = RandomizedPCA(n_components=parameters['pca']['number_dims'], copy=False)
+    pca = PCA(n_components=parameters['pca']['number_dims'], svd_solver='randomized', copy=False)
     pca.fit(np_array)
 
     with open(savepath, 'wb') as f:

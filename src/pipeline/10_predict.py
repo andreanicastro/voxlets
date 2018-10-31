@@ -30,7 +30,7 @@ else:
     raise Exception('Unknown training data')
 
 print len(paths.test_data)
-render_top_view = True
+render_top_view = False
 
 
 if __name__ == '__main__':

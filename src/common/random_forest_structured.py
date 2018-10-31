@@ -3,7 +3,7 @@ import time
 import cPickle
 import pdb
 from multiprocessing import Pool
-from sklearn.decomposition import RandomizedPCA
+from sklearn.decomposition import PCA
 try:
     from scipy.weave import inline
 except:
@@ -136,7 +136,7 @@ class Tree:
         rand_dims = np.sort(np.random.choice(y.shape[1], np.minimum(self.tree_params['num_dims_for_pca'], y.shape[1]), replace=False))
         y_dim_subset = y.take(rand_dims, 1)
 
-        pca = RandomizedPCA(n_components=1) # compute for all components
+        pca = PCA(n_components=1, svd_solver='randomized') # compute for all components
 
         # optional: select a subset of exs (not so important if PCA is fast)
         if self.tree_params['sub_sample_exs_pca']:

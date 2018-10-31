@@ -112,14 +112,13 @@ class RGBDImage(object):
     def load_depth_from_pgm(self, pgm_path):
         ''' the kinfu routine hack i made does pgm like this'''
         self._clear_cache()
-
-        with open(pgm_path, 'r') as f:
+        print pgm_path
+        with open(pgm_path, 'rb') as f:
             if f.readline().strip() == 'P5':
                 height, width = f.readline().strip().split(' ')
                 f.readline()
                 self.depth = np.fromfile(f, dtype=('>u2'))
                 self.depth = self.depth.reshape(int(width), int(height))
-
             elif f.readline().strip() == 'P2':
                 sizes = f.readline().split().split(' ')
                 height = int(sizes[1])
@@ -280,7 +279,8 @@ class RGBDImage(object):
             im.depth = im.depth.astype(float)
             im.depth *= dictionary['depth_scaling']
             im.depth /= 2**16
-
+        print 'min ', np.min(im.depth[~np.isnan(im.depth)]), ' max ', np.max(im.depth[~np.isnan(im.depth)])
+        quit()
         if 'rgb' in dictionary:
             rgb_image_path = os.path.join(scene_folder, dictionary['rgb'])
         else:

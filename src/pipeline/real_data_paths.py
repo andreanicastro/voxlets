@@ -4,7 +4,7 @@ import system_setup
 from copy import deepcopy
 
 # data_folder = '/media/michael/Seagate/phd_projects/volume_completion_data/data/oisin_house/'
-data_folder = '/home/michael/Dropbox/Public/voxlets/for_release/'
+data_folder = '/mnt/disk/datasets/voxlets/for_release_new/'
 
 raw_data = data_folder + 'fold_2/'
 
